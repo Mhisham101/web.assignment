@@ -1,0 +1,48 @@
+﻿@page "/gameinfo"
+@inject HttpClient httpClient
+
+<h3>Game Information</h3>
+
+@if (games == null)
+{
+<p>Loading game information...</p> }
+            else if (games.Count == 0)
+            {
+<p>No games available.</p> }
+            else
+            {
+<table>
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Genre</th>
+            <th>Release Year</th>
+            <th>Platform</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var game in games)
+        {
+<tr>
+    <td>@game.Title</td>
+    <td>@game.Genre</td>
+    <td>@game.ReleaseYear</td>
+    <td>@game.Platform</td>
+</tr>}
+    </tbody>
+</table>}
+
+@code { List<Game> games;
+
+            protected override async Task OnInitializedAsync()
+            {
+                games = await httpClient.GetJsonAsync<List<Game>>("https://localhost:5001/api/games");
+            }
+
+            public class Game
+            {
+                public string Title { get; set; }
+                public string Genre { get; set; }
+                public int ReleaseYear { get; set; }
+                public string Platform { get; set; }
+            } }
